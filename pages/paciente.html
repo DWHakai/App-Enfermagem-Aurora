@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F7F7FA">
+  <title>Paciente · Grey's Anatomy Hospital</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/img/app/icone-app.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/img/app/apple-touch-icon.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Poppins:wght@600&display=swap">
+  <link rel="stylesheet" href="/css/estilo.css">
+  <script type="module" src="/js/paginas/paciente.js"></script>
+</head>
+<body class="protegida">
+  <!-- Tela 4 - Paciente (ficha) -->
+  <main class="app">
+    <header id="topo"></header>
+
+    <section class="ficha-topo">
+      <div class="avatar"><img src="/img/icones/usuario.svg" alt=""></div>
+      <div>
+        <h2 id="nome"></h2>
+        <p id="local"></p>
+        <p class="sub" id="idade-prontuario"></p>
+      </div>
+    </section>
+
+    <dl class="dados">
+      <div><dt>Setor:</dt><dd id="setor"></dd></div>
+      <div><dt>Diagnóstico:</dt><dd id="diagnostico"></dd></div>
+      <div><dt>Alergias:</dt><dd id="alergias"></dd></div>
+      <div><dt>Estado clínico:</dt><dd id="estado"></dd></div>
+      <div><dt>Admissão:</dt><dd id="admissao"></dd></div>
+      <div><dt>Cadastrado por:</dt><dd id="cadastrado-por"></dd></div>
+      <div id="linha-mae"><dt>Mãe:</dt><dd id="mae"></dd></div>
+    </dl>
+
+    <details class="expansivel" id="sigilo">
+      <summary><img src="/img/icones/cadeado.svg" alt="">Informações sigilosas</summary>
+      <p id="info-sigilosa"></p>
+    </details>
+
+    <div class="pilha">
+      <a class="btn btn-rosa btn-normal" href="/pages/plantao.html?aba=passagem">Passagem de Plantão</a>
+      <a class="btn btn-azul btn-normal" href="/pages/plantao.html?aba=evolucao">Evolução de Enfermagem</a>
+    </div>
+  </main>
+</body>
+</html>

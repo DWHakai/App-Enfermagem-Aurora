@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F7F7FA">
+  <title>Meu Perfil · Grey's Anatomy Hospital</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/img/app/icone-app.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/img/app/apple-touch-icon.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Poppins:wght@600&display=swap">
+  <link rel="stylesheet" href="/css/estilo.css">
+  <script type="module" src="/js/paginas/perfil.js"></script>
+</head>
+<body class="protegida">
+  <!-- Tela 10 - Perfil -->
+  <main class="app">
+    <header id="topo"></header>
+
+    <section class="perfil-cabeca">
+      <div class="avatar"><img src="/img/icones/usuario.svg" alt=""></div>
+      <h2 id="nome"></h2>
+      <p id="funcao"></p>
+    </section>
+
+    <dl class="dados">
+      <div><dt>E-mail:</dt><dd id="email"></dd></div>
+      <div><dt>Setor:</dt><dd id="setor"></dd></div>
+      <div><dt>Plantão:</dt><dd id="plantao"></dd></div>
+      <div><dt>Pacientes:</dt><dd id="pacientes"></dd></div>
+    </dl>
+
+    <details class="expansivel">
+      <summary>Configurações</summary>
+      <p><b>Instalar o app no celular</b><br>
+        Android: no Chrome, toque nos três pontinhos e em "Instalar app".<br>
+        iPhone: no Safari, toque em Compartilhar e em "Adicionar à Tela de Início".</p>
+    </details>
+
+    <button class="btn btn-rosa" type="button" id="sair">Sair</button>
+  </main>
+</body>
+</html>

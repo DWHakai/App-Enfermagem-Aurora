@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F7F7FA">
+  <title>Sinais Vitais · Grey's Anatomy Hospital</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/img/app/icone-app.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/img/app/apple-touch-icon.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Poppins:wght@600&display=swap">
+  <link rel="stylesheet" href="/css/estilo.css">
+  <script type="module" src="/js/paginas/sinais-vitais.js"></script>
+</head>
+<body class="protegida">
+  <!-- Tela 5 - Sinais Vitais -->
+  <main class="app">
+    <header id="topo"></header>
+
+    <!-- Última aferição -->
+    <section id="ver">
+      <div class="sinais" id="cartoes"></div>
+      <p class="ultima" id="ultima"></p>
+      <button class="btn btn-rosa" type="button" id="abrir">Registrar sinais</button>
+    </section>
+
+    <!-- Registrar: os mesmos cartões, com campos. Preenche só o que mediu. -->
+    <form class="form" id="form" hidden novalidate>
+      <p class="dica">Preencha só o que foi medido (pelo menos um).</p>
+      <div class="sinais">
+        <label class="sinal">
+          <span class="rotulo">Pressão <span class="unid">mmHg</span></span>
+          <span class="pa">
+            <input name="pa_sist" inputmode="numeric" placeholder="120" aria-label="Pressão sistólica">/<input name="pa_diast" inputmode="numeric" placeholder="80" aria-label="Pressão diastólica">
+          </span>
+        </label>
+        <label class="sinal">
+          <span class="rotulo">Freq. Cardíaca <span class="unid">bpm</span></span>
+          <input name="fc" inputmode="numeric" placeholder="78">
+        </label>
+        <label class="sinal">
+          <span class="rotulo">Temperatura <span class="unid">°C</span></span>
+          <input name="temp" inputmode="decimal" placeholder="36,5">
+        </label>
+        <label class="sinal">
+          <span class="rotulo">Saturação <span class="unid">% SpO₂</span></span>
+          <input name="spo2" inputmode="numeric" placeholder="98">
+        </label>
+        <label class="sinal">
+          <span class="rotulo">Freq. Resp. <span class="unid">irpm</span></span>
+          <input name="fr" inputmode="numeric" placeholder="16">
+        </label>
+        <label class="sinal">
+          <span class="rotulo">Dor <span class="unid">0 a 10</span></span>
+          <input name="dor" inputmode="numeric" placeholder="0">
+        </label>
+      </div>
+      <div class="duas-colunas">
+        <button class="btn btn-branco btn-pequeno" type="button" id="cancelar">Cancelar</button>
+        <button class="btn btn-rosa btn-pequeno" type="submit">Salvar</button>
+      </div>
+    </form>
+  </main>
+</body>
+</html>

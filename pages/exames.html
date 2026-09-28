@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F7F7FA">
+  <title>Exames · Grey's Anatomy Hospital</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/img/app/icone-app.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/img/app/apple-touch-icon.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Poppins:wght@600&display=swap">
+  <link rel="stylesheet" href="/css/estilo.css">
+  <script type="module" src="/js/paginas/exames.js"></script>
+</head>
+<body class="protegida">
+  <!-- Tela 7 - Exames -->
+  <main class="app">
+    <header id="topo"></header>
+
+    <ul class="lista" id="lista"></ul>
+
+    <div class="pilha">
+      <p class="dica">Toque no status para atualizar: Pendente → Em análise → Disponível.</p>
+
+      <!-- Aparece no 1º toque em "Solicitar exame" -->
+      <form class="form" id="form" hidden novalidate>
+        <label class="campo">
+          <span>Nome do exame</span>
+          <input class="input" name="nome" maxlength="100" placeholder="Ex.: Raio-X de tórax" list="sugestoes">
+        </label>
+        <!-- Sugestões que aparecem enquanto digita (pode digitar outro nome) -->
+        <datalist id="sugestoes">
+          <option>Hemograma completo</option>
+          <option>PCR</option>
+          <option>Raio-X de tórax</option>
+          <option>Gasometria arterial</option>
+          <option>Hemocultura</option>
+          <option>Urina tipo 1</option>
+          <option>Eletrólitos (Na, K)</option>
+          <option>Ureia e creatinina</option>
+          <option>Glicemia</option>
+          <option>Eletrocardiograma</option>
+        </datalist>
+      </form>
+
+      <button class="btn btn-rosa" type="button" id="solicitar">Solicitar exame</button>
+    </div>
+  </main>
+</body>
+</html>

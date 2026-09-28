@@ -1,0 +1,470 @@
+/* =====================================================================
+   ESTILO DO APP — cores, fontes e o visual de todas as telas.
+   As cores foram tiradas das telas exportadas do Figma.
+   Ordem: 1) base  2) peças que se repetem  3) cada tela
+   ===================================================================== */
+
+/* ---------- 1. BASE ---------- */
+:root {
+  --fundo: #F7F7FA;
+  --rosa: #F7C4E0;
+  --rosa-claro: #FDEFF6;
+  --azul: #C2E0F7;
+  --azul-claro: #EEF5FD;
+  --amarelo: #FBFB9B;
+  --amarelo-badge: #FFEDA8;
+  --tinta: #2E6ED1;          /* contornos e títulos grandes */
+  --tinta-escura: #1F4C9E;   /* textos */
+  --rosa-tinta: #E05499;     /* detalhes rosa, obrigatório, alerta */
+  --cinza: #7384A6;          /* placeholders e rótulos */
+  --branco: #FFFFFF;
+  --erro: #C0304F;
+
+  --borda: 2px solid var(--tinta);
+  --raio: 14px;
+  --foco: 0 0 0 3px rgba(46, 110, 209, .25);
+  --fonte: 'Kalam', 'Comic Sans MS', cursive;
+  --fonte-sans: 'Poppins', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--fundo);
+  color: var(--tinta-escura);
+  font-family: var(--fonte);
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+a { color: inherit; }
+h1, h2, h3, p { margin: 0; }
+img { display: block; }
+button, input, select, textarea { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+
+/* Telas com login ficam invisíveis até confirmar o usuário (evita "piscar"). */
+body.protegida:not(.pronto) .app { visibility: hidden; }
+
+.app {
+  width: 100%;
+  max-width: 440px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 20px 20px 28px;
+  background: var(--fundo);
+}
+
+/* No computador: moldura de celular, igual ao protótipo. */
+@media (min-width: 600px) {
+  body { background: #E9EDF5; padding: 28px 0; }
+  .app {
+    min-height: calc(100dvh - 56px);
+    border: 3px solid var(--tinta);
+    border-radius: 26px;
+    box-shadow: 0 12px 40px rgba(31, 76, 158, .12);
+  }
+}
+
+/* Texto só para leitor de tela (acessibilidade) */
+.escondido {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* ---------- 2. PEÇAS QUE SE REPETEM ---------- */
+
+/* Cabeçalho: logo + marca + avatar (montado pelo comum.js) */
+#topo {
+  display: grid;
+  grid-template-columns: 70px 1fr 40px;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.topo-logo img { width: 70px; }
+.topo-avatar {
+  display: grid; place-items: center; justify-self: end;
+  width: 40px; height: 40px;
+  border: 2px solid var(--tinta-escura); border-radius: 50%;
+}
+.topo-avatar img { width: 26px; }
+
+.marca { display: flex; flex-direction: column; align-items: center; line-height: .95; }
+.marca-greys { font-size: 34px; font-weight: 700; letter-spacing: .5px; color: var(--tinta); }
+.marca-anatomy { font-size: 23px; letter-spacing: 1.5px; }
+.marca-hospital {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 5px;
+  font-family: var(--fonte-sans); font-size: 10px; font-weight: 600; letter-spacing: 3.5px;
+}
+.marca-hospital::before, .marca-hospital::after {
+  content: ''; width: 30px; height: 2px; background: var(--rosa-tinta);
+}
+
+/* Título da tela + botão voltar */
+.titulo-tela { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.titulo-tela h1 { font-size: 27px; font-weight: 700; line-height: 1.1; }
+.btn-voltar img { width: 30px; }
+
+/* Faixa com o paciente em atendimento */
+.chip-paciente {
+  display: flex; align-items: center; gap: 8px;
+  margin: -6px 0 16px; padding: 6px 12px;
+  background: var(--branco);
+  border: 1.5px dashed var(--tinta); border-radius: 999px;
+  font-size: 15px; text-decoration: none;
+}
+.chip-paciente img { width: 18px; }
+.chip-paciente span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chip-paciente small { color: var(--rosa-tinta); text-decoration: underline; }
+
+/* Botões */
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; min-height: 52px; padding: 10px 18px;
+  border: var(--borda); border-radius: 999px;
+  font-size: 19px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;
+  color: var(--tinta-escura); text-decoration: none;
+  cursor: pointer;
+}
+.btn:active { transform: scale(.98); }
+.btn:disabled { opacity: .6; cursor: progress; }
+.btn:focus-visible { outline: none; box-shadow: var(--foco); }
+.btn img { width: 22px; }
+.btn-rosa { background: var(--rosa); }
+.btn-azul { background: var(--azul); }
+.btn-branco { background: var(--branco); }
+.btn-normal { text-transform: none; letter-spacing: 0; }
+.btn-pequeno { min-height: 44px; font-size: 17px; }
+
+.pilha { display: grid; gap: 14px; }
+/* align-items: end = se um rótulo quebrar linha, os campos continuam alinhados */
+.duas-colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: end; }
+
+/* Formulários */
+.form { display: grid; gap: 14px; }
+.campo { display: grid; gap: 4px; }
+.obrig { color: var(--rosa-tinta); }
+
+.input, .select, .textarea {
+  width: 100%; min-height: 48px; padding: 9px 14px;
+  background: var(--branco);
+  border: var(--borda); border-radius: 12px;
+  font-size: 17px;
+  outline: none;
+}
+.input::placeholder, .textarea::placeholder { color: var(--cinza); }
+.input:focus, .select:focus, .textarea:focus { box-shadow: var(--foco); }
+.campo.obrigatorio .input { border-color: var(--rosa-tinta); }
+.textarea { min-height: 110px; resize: vertical; }
+
+/* Campo com ícone dentro (login) */
+.input-icone { position: relative; display: block; }
+.input-icone img {
+  position: absolute; left: 16px; top: 50%; translate: 0 -50%;
+  width: 24px; pointer-events: none;
+}
+.input-icone .input { min-height: 52px; padding-left: 52px; }
+
+/* Área sigilosa (LGPD) */
+.sigilo > span:first-child { display: flex; align-items: center; gap: 6px; font-weight: 700; color: var(--rosa-tinta); }
+.sigilo > span:first-child img { width: 20px; }
+.sigilo .textarea { min-height: 80px; background: var(--rosa-claro); border: 2px dashed var(--rosa-tinta); }
+
+/* Botões de escolha única (Plantão: Diurno / Noturno / 12x36) */
+.opcoes { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; border: 0; }
+.opcoes legend { margin-bottom: 6px; padding: 0; }
+.opcoes label { position: relative; }
+.opcoes input { position: absolute; inset: 0; opacity: 0; }
+.opcoes span {
+  display: block; padding: 5px 16px;
+  background: var(--branco);
+  border: var(--borda); border-radius: 999px;
+  cursor: pointer;
+}
+.opcoes input:checked + span { background: var(--rosa); }
+.opcoes input:focus-visible + span { box-shadow: var(--foco); }
+
+.erro {
+  padding: 8px 12px;
+  background: #FDE8EE; color: var(--erro);
+  border: 1.5px solid var(--erro); border-radius: 10px;
+  font-size: 15px;
+}
+.dica { font-size: 14px; color: var(--cinza); }
+.dica-rosa { font-size: 14px; color: var(--rosa-tinta); }
+
+/* Caixa com faixa azul de título (Paciente, Passagem, Nova observação) */
+.bloco { overflow: hidden; background: var(--branco); border: var(--borda); border-radius: 12px; }
+.bloco > label {
+  display: block; padding: 6px 14px;
+  background: var(--azul); border-bottom: var(--borda);
+}
+.bloco .textarea { min-height: 120px; border: 0; border-radius: 0; box-shadow: none; }
+.bloco .select { width: calc(100% - 20px); margin: 10px; }
+
+/* Formulário que abre dentro da tela (ex.: adicionar medicação) */
+.expansivel { margin-bottom: 16px; background: var(--branco); border: var(--borda); border-radius: var(--raio); }
+.btn + .expansivel { margin-top: 16px; }
+.expansivel > summary {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 14px;
+  font-weight: 700; list-style: none; cursor: pointer;
+}
+.expansivel > summary::-webkit-details-marker { display: none; }
+.expansivel > summary img { width: 20px; }
+.expansivel[open] > summary { background: var(--azul); border-bottom: var(--borda); border-radius: 12px 12px 0 0; }
+.expansivel .form, .expansivel > p { padding: 14px; }
+
+/* Listas */
+.lista { display: grid; gap: 12px; margin: 0 0 16px; padding: 0; list-style: none; }
+.item {
+  display: flex; align-items: center; gap: 12px;
+  min-height: 64px; padding: 10px 14px;
+  background: var(--branco);
+  border: var(--borda); border-radius: var(--raio);
+}
+.item.feito { background: var(--azul); }
+.item > img { flex: none; width: 30px; }
+.item .texto { flex: 1; min-width: 0; }
+.item .texto b { display: block; font-size: 18px; line-height: 1.15; }
+.item .texto small { font-size: 15px; color: var(--cinza); }
+
+/* Cartão de evento (histórico e observações), alternando rosa e azul */
+.evento { padding: 8px 14px; border: var(--borda); border-radius: var(--raio); }
+.evento:nth-child(odd) { background: var(--rosa); }
+.evento:nth-child(even) { background: var(--azul); }
+.evento .quando { font-size: 15px; font-weight: 700; color: var(--cinza); }
+.evento .detalhe { margin-top: 2px; white-space: pre-wrap; }
+
+.vazio {
+  padding: 18px;
+  color: var(--cinza); text-align: center;
+  border: 2px dashed var(--azul); border-radius: var(--raio);
+}
+.subtitulo { margin: 20px 0 12px; font-size: 21px; font-weight: 700; }
+
+/* Ficha e perfil (lista "rótulo: valor") */
+.dados {
+  display: grid; gap: 4px;
+  margin: 0 0 14px; padding: 12px 16px;
+  background: var(--branco);
+  border: var(--borda); border-radius: var(--raio);
+}
+.dados div { display: flex; justify-content: space-between; gap: 12px; }
+.dados dt { color: var(--cinza); }
+.dados dd { margin: 0; text-align: right; }
+.dados .alerta { font-weight: 700; color: var(--rosa-tinta); }
+
+/* Aviso "Salvo com sucesso!" (igual ao do Figma) */
+.overlay {
+  position: fixed; inset: 0; z-index: 50;
+  display: grid; place-items: center; padding: 24px;
+  background: rgba(31, 76, 158, .25);
+}
+.overlay-caixa {
+  display: grid; justify-items: center; gap: 16px;
+  width: min(100%, 290px); padding: 26px 24px 22px;
+  background: var(--branco);
+  border: 3px solid var(--tinta); border-radius: 22px;
+  box-shadow: 0 14px 30px rgba(31, 76, 158, .2);
+}
+.overlay-check {
+  display: grid; place-items: center;
+  width: 54px; height: 54px;
+  background: var(--rosa);
+  border: 2px solid var(--tinta); border-radius: 50%;
+}
+.overlay-check img { width: 30px; }
+.overlay-caixa p { font-size: 25px; font-weight: 700; line-height: 1.1; text-align: center; }
+.btn-ok { width: 150px; min-height: 42px; font-size: 18px; }
+
+/* ---------- 3. CADA TELA ---------- */
+
+/* Login */
+.login { display: flex; flex-direction: column; align-items: center; gap: 18px; padding-top: 18px; }
+.login .logo-grande { width: 118px; }
+.login .marca-greys { font-size: 58px; }
+.login .marca-anatomy { font-size: 38px; letter-spacing: 3px; }
+.login .marca-hospital { margin-top: 10px; font-size: 13px; letter-spacing: 5px; }
+.login .marca-hospital::before, .login .marca-hospital::after { width: 66px; }
+.login .form { width: 100%; }
+.slogan { font-size: 21px; line-height: 1.25; text-align: center; }
+.batimento { width: 100%; max-width: 330px; }
+.link-simples { font-size: 17px; color: var(--tinta); text-align: center; }
+
+/* Menu */
+.banner-sa {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 16px; padding: 14px 16px;
+  background: var(--amarelo);
+  border: 2px solid var(--rosa-tinta); border-radius: var(--raio);
+  text-decoration: none;
+}
+.banner-sa .laco { flex: none; width: 34px; }
+.banner-sa h2 { font-size: 22px; font-weight: 700; }
+.banner-sa p { font-size: 17px; font-style: italic; }
+.banner-sa .coracao { flex: none; width: 24px; margin-left: auto; }
+
+.seletor-paciente { margin-bottom: 16px; }
+.seletor-paciente.destaque .select { border-color: var(--rosa-tinta); box-shadow: 0 0 0 4px rgba(224, 84, 153, .2); }
+
+.grade { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+.cartao {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  min-height: 106px; padding: 14px 8px;
+  border: var(--borda); border-radius: var(--raio);
+  font-size: 19px; text-align: center; text-decoration: none;
+}
+.cartao:active { transform: scale(.97); }
+.cartao img { width: 40px; }
+.cartao.rosa { background: var(--rosa); }
+.cartao.azul { background: var(--azul); }
+.cartao.desativado { opacity: .5; }
+
+/* Ficha do paciente */
+.ficha-topo {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 14px; padding: 14px;
+  background: var(--rosa);
+  border: 2px solid var(--rosa-tinta); border-radius: var(--raio);
+}
+.avatar {
+  display: grid; place-items: center; flex: none;
+  background: var(--branco);
+  border: 2px solid var(--tinta-escura); border-radius: 50%;
+}
+.ficha-topo .avatar { width: 58px; height: 58px; }
+.ficha-topo .avatar img { width: 36px; }
+.ficha-topo h2 { font-size: 20px; font-weight: 700; line-height: 1.15; }
+.ficha-topo .sub { font-size: 15px; color: var(--cinza); }
+#info-sigilosa { white-space: pre-wrap; }
+
+/* Plantão (abas Passagem / Evolução) */
+.abas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.aba {
+  position: relative;
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: -2px; padding: 10px 12px;
+  background: var(--azul);
+  border: var(--borda); border-bottom: 0; border-radius: 14px 14px 0 0;
+  font-size: 16px; line-height: 1.15; text-align: left;
+  cursor: pointer;
+}
+.aba img { flex: none; width: 32px; }
+.aba.ativa { z-index: 1; padding-bottom: 12px; background: var(--rosa); }
+.painel {
+  display: grid; gap: 14px;
+  padding: 16px 14px;
+  background: var(--azul-claro);
+  border: var(--borda); border-radius: 0 0 var(--raio) var(--raio);
+}
+.painel.so-evolucao #evolucao { min-height: 260px; }
+.data-hora { display: flex; flex-wrap: wrap; gap: 10px 14px; }
+.data-hora label { display: flex; align-items: center; gap: 6px; }
+.data-hora img { width: 24px; }
+.data-hora input {
+  padding: 2px;
+  background: transparent;
+  border: 0; border-bottom: 2px solid var(--tinta);
+  font-size: 16px; outline: none;
+}
+
+/* Sinais vitais */
+.sinais { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.sinal {
+  display: block;
+  padding: 8px 10px 10px;
+  border: var(--borda); border-radius: var(--raio);
+  text-align: center;
+}
+.sinal:nth-child(4n+1), .sinal:nth-child(4n) { background: var(--rosa); }
+.sinal:nth-child(4n+2), .sinal:nth-child(4n+3) { background: var(--azul); }
+.sinal .rotulo { font-size: 16px; }
+.sinal .valor { font-size: 34px; font-weight: 700; line-height: 1.05; color: var(--tinta); }
+.sinal .unid { font-size: 15px; font-weight: 400; color: var(--cinza); }
+.sinal .valor .unid { display: block; } /* unidade embaixo: "120/80" cabe e os cartões ficam iguais */
+.sinal input {
+  width: 100%; margin-top: 4px; padding: 4px 6px;
+  background: var(--branco);
+  border: 1.5px solid var(--tinta); border-radius: 8px;
+  font-size: 22px; font-weight: 700; color: var(--tinta); text-align: center;
+}
+.sinal .pa { display: flex; align-items: center; gap: 4px; }
+.sinal.alterado { outline: 3px solid var(--rosa-tinta); outline-offset: -6px; }
+.ultima { margin-bottom: 14px; font-size: 16px; color: var(--cinza); }
+
+/* Medicações */
+.item .hora {
+  flex: none; padding: 1px 8px;
+  background: var(--rosa); border-radius: 8px;
+  font-size: 16px; font-weight: 700;
+}
+.caixa-check { position: relative; flex: none; width: 34px; height: 34px; }
+.caixa-check input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.caixa-check input:disabled { cursor: default; }
+.caixa-check span {
+  display: grid; place-items: center;
+  width: 100%; height: 100%;
+  background: var(--branco);
+  border: var(--borda); border-radius: 8px;
+}
+.caixa-check img { width: 24px; opacity: 0; }
+.caixa-check input:checked + span { background: var(--rosa); }
+.caixa-check input:checked + span img { opacity: 1; }
+.caixa-check input:focus-visible + span { box-shadow: var(--foco); }
+
+/* Exames */
+.badge {
+  flex: none; padding: 1px 10px;
+  background: var(--azul);
+  border: 1.5px solid var(--tinta); border-radius: 999px;
+  font-size: 15px; white-space: nowrap;
+  cursor: pointer;
+}
+.badge.pendente { background: var(--rosa); }
+.badge.em-analise { background: var(--amarelo-badge); }
+
+/* Histórico (linha do tempo) */
+.linha-tempo { position: relative; padding-left: 20px; }
+.linha-tempo::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--rosa-tinta); border-radius: 2px;
+}
+
+/* Perfil */
+.perfil-cabeca { display: grid; justify-items: center; gap: 6px; margin-bottom: 16px; text-align: center; }
+.perfil-cabeca .avatar { width: 88px; height: 88px; background: var(--rosa); border-width: 3px; }
+.perfil-cabeca .avatar img { width: 54px; }
+.perfil-cabeca h2 { font-size: 27px; font-weight: 700; }
+.perfil-cabeca p { color: var(--cinza); }
+
+/* Setembro Amarelo */
+.sa-topo {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 14px; padding: 18px 16px;
+  background: var(--amarelo);
+  border: 2px solid var(--rosa-tinta); border-radius: var(--raio);
+}
+.sa-topo .laco { flex: none; width: 58px; }
+.sa-campanha { font-size: 15px; font-weight: 700; letter-spacing: .5px; color: var(--rosa-tinta); text-transform: uppercase; }
+.sa-topo h2 { font-size: 25px; font-weight: 700; line-height: 1.15; }
+.sa-intro { margin-bottom: 14px; font-size: 18px; }
+.sa-secao {
+  margin-bottom: 14px; padding: 14px 16px;
+  background: var(--branco);
+  border: var(--borda); border-radius: var(--raio);
+}
+.sa-secao h3 { margin-bottom: 8px; font-size: 21px; }
+.sa-secao ul { margin: 0; padding-left: 20px; }
+.sa-secao li { margin: 4px 0; }
+.sa-secao p + p, .sa-secao ul + p { margin-top: 10px; }
+.sa-cvv { display: grid; gap: 10px; background: var(--rosa); border-color: var(--rosa-tinta); }
+.sa-cvv h3 { margin: 0; }
+.sa-cvv .btn { background: var(--branco); border-color: var(--rosa-tinta); font-size: 24px; }
+.sa-cvv .btn img { width: 26px; }
+.sa-equipe { background: var(--azul-claro); }
+.sa-fontes { margin: 4px 0 16px; font-size: 14px; color: var(--cinza); text-align: center; }

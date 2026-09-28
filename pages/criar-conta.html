@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F7F7FA">
+  <title>Criar conta · Grey's Anatomy Hospital</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/img/app/icone-app.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/img/app/apple-touch-icon.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Poppins:wght@600&display=swap">
+  <link rel="stylesheet" href="/css/estilo.css">
+  <script type="module" src="/js/paginas/criar-conta.js"></script>
+</head>
+<body>
+  <!-- Criar conta: acesso da equipe de enfermagem -->
+  <main class="app">
+    <header id="topo"></header>
+
+    <form class="form" id="form" novalidate>
+      <label class="campo obrigatorio">
+        <span>Nome completo<span class="obrig">*</span></span>
+        <input class="input" name="nome" maxlength="100" placeholder="Ex.: Meredith Grey" autocomplete="name">
+      </label>
+      <label class="campo obrigatorio">
+        <span>E-mail<span class="obrig">*</span></span>
+        <input class="input" type="email" name="email" maxlength="120" placeholder="nome@greys.com.br" autocomplete="email">
+      </label>
+      <div class="duas-colunas">
+        <label class="campo obrigatorio">
+          <span>Senha<span class="obrig">*</span></span>
+          <input class="input" type="password" name="senha" maxlength="72" placeholder="8+ com número" autocomplete="new-password">
+        </label>
+        <label class="campo obrigatorio">
+          <span>Confirmar<span class="obrig">*</span></span>
+          <input class="input" type="password" name="senha2" maxlength="72" placeholder="repita" autocomplete="new-password">
+        </label>
+      </div>
+      <label class="campo">
+        <span>Função</span>
+        <select class="select" name="funcao">
+          <option>Enfermeira(o)</option>
+          <option>Técnica(o) de Enfermagem</option>
+          <option>Estudante de Enfermagem</option>
+        </select>
+      </label>
+      <label class="campo">
+        <span>Setor</span>
+        <input class="input" name="setor" maxlength="60" placeholder="Ex.: Ala B">
+      </label>
+      <fieldset class="opcoes">
+        <legend>Plantão</legend>
+        <label><input type="radio" name="plantao" value="Diurno (07h-19h)" checked><span>Diurno</span></label>
+        <label><input type="radio" name="plantao" value="Noturno (19h-07h)"><span>Noturno</span></label>
+        <label><input type="radio" name="plantao" value="12x36"><span>12x36</span></label>
+      </fieldset>
+      <p class="dica-rosa">* Campos obrigatórios</p>
+      <button class="btn btn-rosa" type="submit">Criar conta</button>
+    </form>
+  </main>
+</body>
+</html>

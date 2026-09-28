@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F7F7FA">
+  <title>Medicações · Grey's Anatomy Hospital</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/img/app/icone-app.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/img/app/apple-touch-icon.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Poppins:wght@600&display=swap">
+  <link rel="stylesheet" href="/css/estilo.css">
+  <script type="module" src="/js/paginas/medicacoes.js"></script>
+</head>
+<body class="protegida">
+  <!-- Tela 6 - Medicações: marcar as doses dadas hoje e tocar em "Checar medicação" -->
+  <main class="app">
+    <header id="topo"></header>
+
+    <ul class="lista" id="lista"></ul>
+    <button class="btn btn-rosa" type="button" id="checar">Checar medicação</button>
+
+    <details class="expansivel">
+      <summary><img src="/img/icones/mais.svg" alt="">Adicionar da prescrição</summary>
+      <form class="form" id="form" novalidate>
+        <label class="campo">
+          <span>Medicamento e dose<span class="obrig">*</span></span>
+          <input class="input" name="nome" maxlength="100" placeholder="Ex.: Dipirona 1g">
+        </label>
+        <div class="duas-colunas">
+          <label class="campo">
+            <span>Via</span>
+            <select class="select" name="via">
+              <option>VO</option>
+              <option>EV</option>
+              <option>IM</option>
+              <option>SC</option>
+              <option>Inalatória</option>
+              <option>Tópica</option>
+            </select>
+          </label>
+          <label class="campo">
+            <span>Horário<span class="obrig">*</span></span>
+            <input class="input" type="time" name="horario">
+          </label>
+        </div>
+        <label class="campo">
+          <span>Frequência</span>
+          <input class="input" name="frequencia" maxlength="30" placeholder="Ex.: 12/12h">
+        </label>
+        <p class="dica">Remédio de 12/12h, 8/8h...: adicione uma vez para cada horário.</p>
+        <button class="btn btn-azul btn-pequeno" type="submit">Adicionar</button>
+      </form>
+    </details>
+  </main>
+</body>
+</html>

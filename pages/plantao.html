@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F7F7FA">
+  <title>Evolução / Plantão · Grey's Anatomy Hospital</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/img/app/icone-app.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/img/app/apple-touch-icon.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Poppins:wght@600&display=swap">
+  <link rel="stylesheet" href="/css/estilo.css">
+  <script type="module" src="/js/paginas/plantao.js"></script>
+</head>
+<body class="protegida">
+  <!-- Telas 3 e 3b - Passagem de Plantão / Evolução de Enfermagem (FUNCIONALIDADE PRINCIPAL) -->
+  <main class="app">
+    <header id="topo"></header>
+
+    <!-- O que o plantão anterior deixou: ler antes de escrever -->
+    <h2 class="subtitulo">Último registro</h2>
+    <ul class="lista" id="ultimos"></ul>
+
+    <div class="abas">
+      <button class="aba" type="button" id="aba-passagem">
+        <img src="/img/icones/usuarios.svg" alt="">Passagem<br>de Plantão
+      </button>
+      <button class="aba" type="button" id="aba-evolucao">
+        <img src="/img/icones/prancheta.svg" alt="">Evolução de<br>Enfermagem
+      </button>
+    </div>
+
+    <form class="painel" id="form" novalidate>
+      <div class="bloco">
+        <label for="paciente">Paciente</label>
+        <select class="select" id="paciente" name="paciente"></select>
+      </div>
+
+      <div class="bloco" id="bloco-passagem">
+        <label for="passagem">Passagem de Plantão</label>
+        <textarea class="textarea" id="passagem" name="passagem" maxlength="4000" placeholder="Digite as informações do plantão..."></textarea>
+      </div>
+
+      <div class="bloco">
+        <label for="evolucao">Evolução de Enfermagem</label>
+        <textarea class="textarea" id="evolucao" name="evolucao" maxlength="4000" placeholder="Digite a evolução..."></textarea>
+      </div>
+
+      <div class="data-hora">
+        <label><img src="/img/icones/calendario.svg" alt="">Data: <input type="date" name="data"></label>
+        <label><img src="/img/icones/relogio.svg" alt="">Horário: <input type="time" name="hora"></label>
+      </div>
+
+      <button class="btn btn-rosa" type="submit"><img src="/img/icones/salvar.svg" alt="">Salvar</button>
+    </form>
+  </main>
+</body>
+</html>
