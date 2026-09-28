@@ -16,5 +16,4 @@ Funciona no navegador e pode ser instalado no celular como app.
 
 - [Como funciona](docs/como-funciona.md): o código explicado, tela por tela
 - [Publicar e testar](docs/publicar-e-testar.md): Supabase, Netlify e roteiro de teste
-- [Mudanças em relação ao Figma](docs/mudancas-figma.md)
 - [Documento de requisitos (modelo)](docs/requisitos-modelo.md)
