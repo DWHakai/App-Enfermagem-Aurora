@@ -23,7 +23,7 @@ form.addEventListener('submit', async (evento) => {
   if (!form.email.checkValidity()) return mostrarErro(form, 'E-mail inválido.');
   const problema = problemaDaSenha(senha);
   if (problema) return mostrarErro(form, problema);
-  if (senha !== form.senha2.value) return mostrarErro(form, 'As senhas não conferem.');
+  if (senha !== form.senha2.value) return mostrarErro(form, 'As senhas estão diferentes. Digite a mesma senha nos dois campos.');
 
   const botao = form.querySelector('button');
   botao.disabled = true;
