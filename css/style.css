@@ -45,6 +45,10 @@ img { display: block; }
 button, input, select, textarea { font: inherit; color: inherit; }
 [hidden] { display: none !important; }
 
+/* Tira o retângulo azul que o Chrome do Android desenha no que é tocado
+   (ele é quadrado e ignora o arredondado). O retorno do toque fica na seção "Toque e foco". */
+html { -webkit-tap-highlight-color: transparent; }
+
 /* Telas com login ficam invisíveis até confirmar o usuário (evita "piscar"). */
 body.protegida:not(.pronto) .app { visibility: hidden; }
 
@@ -130,15 +134,34 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
   color: var(--tinta-escura); text-decoration: none;
   cursor: pointer;
 }
-.btn:active { transform: scale(.98); }
 .btn:disabled { opacity: .6; cursor: progress; }
-.btn:focus-visible { outline: none; box-shadow: var(--foco); }
 .btn img { width: 22px; }
 .btn-rosa { background: var(--rosa); }
 .btn-azul { background: var(--azul); }
 .btn-branco { background: var(--branco); }
 .btn-normal { text-transform: none; letter-spacing: 0; }
 .btn-pequeno { min-height: 44px; font-size: 17px; }
+
+/* Toque e foco: tudo que é clicável "afunda" um pouco ao tocar, no formato
+   do próprio botão. No computador, quem navega pelo teclado (Tab) vê um anel
+   arredondado; clicando com o mouse, o anel não aparece. */
+.btn, .cartao, .aba, .badge, .chip-paciente, .btn-voltar, .topo-avatar, .expansivel > summary, .link-simples {
+  transition: transform .08s ease, filter .08s ease, opacity .08s ease;
+}
+.btn:active, .cartao:active, .badge:active, .chip-paciente:active { transform: scale(.97); filter: brightness(.94); }
+.btn-voltar:active, .topo-avatar:active { transform: scale(.9); }
+.aba:active { filter: brightness(.94); }
+.expansivel > summary:active { background: var(--azul-claro); }
+.link-simples:active { opacity: .6; }
+.btn:disabled:active { transform: none; filter: none; }
+
+.btn-voltar, .topo-avatar { border-radius: 50%; }
+.expansivel > summary { border-radius: inherit; }
+.btn:focus-visible, .cartao:focus-visible, .aba:focus-visible, .badge:focus-visible,
+.chip-paciente:focus-visible, .btn-voltar:focus-visible, .topo-avatar:focus-visible,
+.expansivel > summary:focus-visible, .link-simples:focus-visible {
+  outline: none; box-shadow: var(--foco);
+}
 
 .pilha { display: grid; gap: 14px; }
 /* align-items: end = se um rótulo quebrar linha, os campos continuam alinhados */
@@ -325,7 +348,6 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
   border: var(--borda); border-radius: var(--raio);
   font-size: 19px; text-align: center; text-decoration: none;
 }
-.cartao:active { transform: scale(.97); }
 .cartao img { width: 40px; }
 .cartao.rosa { background: var(--rosa); }
 .cartao.azul { background: var(--azul); }

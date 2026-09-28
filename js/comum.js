@@ -156,7 +156,7 @@ export async function iniciarTela({ titulo, voltar = '/pages/menu.html', precisa
   }
 
   desenharCabecalho(usuario, titulo, voltar);
-  document.body.classList.add('pronto'); // mostra a tela (ver "protegida" no estilo.css)
+  document.body.classList.add('pronto'); // mostra a tela (ver "protegida" no style.css)
   return { usuario, paciente };
 }
 

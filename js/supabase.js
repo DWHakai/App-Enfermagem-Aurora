@@ -16,7 +16,7 @@ const SUPABASE_URL = 'https://dhruusyqzrdjjrwkczpz.supabase.co';
 const SUPABASE_CHAVE = 'sb_publishable_CEZWmRSsAjP046nrgL-kRg_r7aQLsv2';
 
 if (!SUPABASE_URL || !SUPABASE_CHAVE) {
-  alert('Falta configurar o banco: preencha SUPABASE_URL e SUPABASE_CHAVE no arquivo js/supabase.js (veja docs/publicar-e-testar.md).');
+  alert('Falta configurar o banco: preencha SUPABASE_URL e SUPABASE_CHAVE no arquivo js/supabase.js (Supabase > seu projeto > botão "Connect").');
   throw new Error('Supabase não configurado');
 }
 
@@ -29,7 +29,7 @@ export function traduzirErro(error) {
   if (mensagem.includes('User already registered')) return 'Este e-mail já tem conta. Faça login.';
   if (mensagem.includes('Password should be')) return 'Senha fraca: use pelo menos 8 caracteres, com letras e números.';
   if (mensagem.includes('is invalid') || mensagem.includes('Unable to validate email')) return 'E-mail inválido.';
-  if (mensagem.includes('Email not confirmed')) return 'E-mail não confirmado. Desligue "Confirm email" no Supabase (veja docs/publicar-e-testar.md).';
+  if (mensagem.includes('Email not confirmed')) return 'E-mail não confirmado. Desligue "Confirm email" no Supabase (Authentication > Sign In / Providers > Email).';
   if (mensagem.includes('Signups not allowed')) return 'A criação de contas está desligada no Supabase.';
   if (mensagem.includes('rate limit') || mensagem.includes('security purposes')) return 'Muitas tentativas seguidas. Espere um minuto e tente de novo.';
   if (mensagem.includes('duplicate key')) return 'Essa dose já foi checada hoje.';

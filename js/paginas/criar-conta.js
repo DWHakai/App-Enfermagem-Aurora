@@ -49,7 +49,7 @@ form.addEventListener('submit', async (evento) => {
   // Conta criada mas sem sessão = o Supabase está pedindo confirmação por e-mail
   if (!data.session) {
     return mostrarErro(form, 'Conta criada, mas o Supabase pediu confirmação por e-mail. '
-      + 'Desligue "Confirm email" no Supabase (veja docs/publicar-e-testar.md) ou confirme pelo link do e-mail.');
+      + 'Desligue "Confirm email" no Supabase (Authentication > Sign In / Providers > Email) ou confirme pelo link do e-mail.');
   }
   location.href = '/pages/menu.html';
 });
