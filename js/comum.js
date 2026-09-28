@@ -247,3 +247,49 @@ export function mostrarErro(form, mensagem) {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').catch((erro) => console.warn('Service worker:', erro));
 }
+
+// ---------------------------------------------------------------------
+//  BOTÃO "INSTALAR O APP" (tela de Login e Perfil, na caixa id="instalar")
+//  Android: o Chrome avisa que o app pode ser instalado (evento
+//  "beforeinstallprompt"). Guardamos o aviso e o nosso botão abre a
+//  janela "Instalar" do próprio Chrome: um toque e pronto.
+//  iPhone: não existe esse aviso, então o botão explica o caminho.
+// ---------------------------------------------------------------------
+const caixaInstalar = document.getElementById('instalar');
+const jaInstalado = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const ehIphone = /iPhone|iPad|iPod/.test(navigator.userAgent);
+const ehAndroid = /Android/.test(navigator.userAgent);
+let pedidoDeInstalacao = null;
+
+function explicarInstalacao(texto) {
+  document.getElementById('instalar-dica').textContent = texto;
+}
+
+if (caixaInstalar && !jaInstalado) {
+  // iPhone e Android sem o aviso do Chrome: o botão mostra o passo a passo
+  caixaInstalar.hidden = !(ehIphone || ehAndroid);
+
+  window.addEventListener('beforeinstallprompt', (evento) => {
+    evento.preventDefault(); // guarda o aviso para o nosso botão usar
+    pedidoDeInstalacao = evento;
+    caixaInstalar.hidden = false;
+  });
+
+  document.getElementById('instalar-botao').addEventListener('click', async () => {
+    if (pedidoDeInstalacao) {
+      pedidoDeInstalacao.prompt(); // abre a janela "Instalar" do Chrome
+      const { outcome } = await pedidoDeInstalacao.userChoice;
+      pedidoDeInstalacao = null; // o aviso só pode ser usado uma vez
+      if (outcome === 'accepted') caixaInstalar.hidden = true;
+      return;
+    }
+    if (ehIphone) {
+      explicarInstalacao('No Safari, toque no botão Compartilhar (o quadrado com a seta para cima) e depois em "Adicionar à Tela de Início".');
+    } else {
+      explicarInstalacao('Abra este site no Chrome, toque nos três pontinhos (⋮) lá em cima e depois em "Instalar app".');
+    }
+  });
+
+  // Instalou (pelo botão ou pelo menu do Chrome): esconde o botão
+  window.addEventListener('appinstalled', () => { caixaInstalar.hidden = true; });
+}

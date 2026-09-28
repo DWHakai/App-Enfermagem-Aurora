@@ -26,5 +26,8 @@ A professora avalia a correspondência entre o Figma e o sistema (10% da nota), 
 8. Em Perfil, **"Configurações"** mostra como instalar o app.
 9. No topo de Evolução / Plantão, o bloco **"Último registro"**: a última passagem e a última evolução
    do paciente, com data, hora e quem escreveu. Quem assume o plantão lê antes de escrever.
+10. No Login (e no Perfil), o botão azul **"Instalar o app no celular"**. Só aparece no celular
+    e some depois que o app é instalado.
+11. Saiu o campo **COREN** do Criar conta e do Perfil (o app é da equipe técnica de enfermagem).
 
 **Mantido do Figma:** o aviso **"Salvo com sucesso!"**.
