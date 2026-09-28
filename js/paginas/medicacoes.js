@@ -1,5 +1,4 @@
-// Tela 6 - Medicações: a enfermagem transcreve a prescrição (um horário por linha)
-// e checa as doses dadas no dia.
+// Tela 6 - Medicações
 import { supabase, traduzirErro } from '../supabase.js';
 import { iniciarTela, mostrarPacienteAtual, avisoSucesso, mostrarErro, esc, hojeISO } from '../comum.js';
 
@@ -11,8 +10,6 @@ const botaoChecar = document.getElementById('checar');
 const form = document.getElementById('form');
 
 async function mostrarLista() {
-  // Duas buscas: as medicações e as doses já checadas HOJE.
-  // Cada resposta do Supabase é um objeto com .data e .error
   const medicacoes = await supabase.from('medicacoes').select('*')
     .eq('paciente_id', paciente.id)
     .order('horario');
@@ -29,7 +26,6 @@ async function mostrarLista() {
   }
 
   lista.innerHTML = medicacoes.data.map((m) => {
-    // Dose já checada hoje: aparece marcada e travada
     const checada = dosesDeHoje.data.some((dose) => dose.medicacao_id === m.id);
     let detalhes = m.via || '';
     if (m.frequencia) detalhes += ' · ' + m.frequencia;
@@ -49,7 +45,6 @@ async function mostrarLista() {
   }).join('');
 }
 
-// "Checar medicação": grava as doses marcadas agora
 botaoChecar.addEventListener('click', async () => {
   const marcadas = lista.querySelectorAll('input:checked:not(:disabled)');
   if (marcadas.length === 0) return alert('Marque as medicações que foram administradas.');
@@ -60,7 +55,7 @@ botaoChecar.addEventListener('click', async () => {
   }
 
   botaoChecar.disabled = true;
-  // O banco recusa a mesma dose duas vezes no dia (unique no 01-estrutura.sql)
+  // o banco recusa a mesma dose duas vezes no dia
   const { error } = await supabase.from('administracoes').insert(doses);
   botaoChecar.disabled = false;
 
@@ -69,7 +64,6 @@ botaoChecar.addEventListener('click', async () => {
   await mostrarLista();
 });
 
-// "Adicionar da prescrição"
 form.addEventListener('submit', async (evento) => {
   evento.preventDefault();
   const nome = form.nome.value.trim();
@@ -90,7 +84,7 @@ form.addEventListener('submit', async (evento) => {
 
   mostrarErro(form, '');
   form.reset();
-  form.closest('details').open = false; // fecha o "Adicionar da prescrição"
+  form.closest('details').open = false;
   await avisoSucesso();
   await mostrarLista();
 });

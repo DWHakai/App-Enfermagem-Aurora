@@ -1,17 +1,7 @@
-// =====================================================================
-//  CONEXÃO COM O BANCO DE DADOS (Supabase)
-//  Todas as telas usam o "supabase" exportado aqui para ler e gravar.
-// =====================================================================
-
-// Biblioteca oficial do Supabase, carregada direto da internet (CDN).
+// Conexão com o banco (Supabase)
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/+esm';
 
-// Onde achar: supabase.com > seu projeto > botão "Connect"
-// (ou Project Settings > API Keys).
-//   SUPABASE_URL   = "Project URL"      ex.: https://abcdefghij.supabase.co
-//   SUPABASE_CHAVE = "Publishable key"  ex.: sb_publishable_...  (ou a antiga "anon public")
-// Esta chave PODE ficar no código: sem login ela não acessa nada
-// (ver banco-de-dados/01-estrutura.sql). NUNCA coloque aqui a "secret key".
+// chave pública (publishable): sem login não acessa nada. Nunca colocar a secret key aqui
 const SUPABASE_URL = 'https://dhruusyqzrdjjrwkczpz.supabase.co';
 const SUPABASE_CHAVE = 'sb_publishable_CEZWmRSsAjP046nrgL-kRg_r7aQLsv2';
 
@@ -22,7 +12,7 @@ if (!SUPABASE_URL || !SUPABASE_CHAVE) {
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_CHAVE);
 
-// Troca as mensagens de erro do Supabase (em inglês) por mensagens para a equipe.
+// erros do Supabase vêm em inglês
 export function traduzirErro(error) {
   const mensagem = error.message || String(error);
   if (mensagem.includes('Invalid login credentials')) return 'E-mail ou senha incorretos.';
@@ -34,7 +24,7 @@ export function traduzirErro(error) {
   if (mensagem.includes('rate limit') || mensagem.includes('security purposes')) return 'Muitas tentativas seguidas. Espere um minuto e tente de novo.';
   if (mensagem.includes('duplicate key')) return 'Essa dose já foi checada hoje.';
   if (mensagem.includes('violates check constraint')) return 'Algum valor está fora do permitido. Confira os campos.';
-  // "Failed to fetch" (Chrome), "NetworkError" (Firefox), "Load failed" (Safari/iPhone)
+  // sem internet (Chrome / Firefox / Safari)
   if (mensagem.includes('Failed to fetch') || mensagem.includes('NetworkError') || mensagem.includes('Load failed')) {
     return 'Sem conexão com o servidor. Verifique a internet.';
   }

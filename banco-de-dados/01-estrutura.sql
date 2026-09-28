@@ -1,17 +1,7 @@
--- =====================================================================
---  Grey's Anatomy Hospital — estrutura do banco de dados
---  (Supabase / PostgreSQL). App usado só pela EQUIPE DE ENFERMAGEM.
---
---  Como usar: Supabase > SQL Editor > New query > colar tudo > Run.
---  Pode rodar de novo sem dar erro.
--- =====================================================================
+-- Grey's Anatomy Hospital: estrutura do banco (Supabase). Pode rodar de novo.
 
 
--- ---------------------------------------------------------------------
---  PERFIS: quem usa o app (enfermeiras, técnicas, estudantes)
---  O e-mail e a senha ficam numa tabela interna do Supabase (auth.users).
---  Aqui ficam os outros dados da pessoa.
--- ---------------------------------------------------------------------
+-- Perfis da equipe (e-mail e senha ficam em auth.users)
 create table if not exists perfis (
   id        uuid primary key references auth.users(id) on delete cascade,
   nome      text not null,
@@ -21,10 +11,7 @@ create table if not exists perfis (
   criado_em timestamptz not null default now()
 );
 
--- Gatilho (trigger): quando alguém cria uma conta, copia os dados do
--- formulário "Criar conta" para a tabela perfis.
--- "security definer" = roda com a permissão do dono do banco. Precisa
--- disso porque quem grava a conta nova é o sistema de login do Supabase.
+-- cria o perfil quando alguém cria a conta
 create or replace function public.criar_perfil()
 returns trigger
 language plpgsql
@@ -48,20 +35,15 @@ create trigger ao_criar_conta
   after insert on auth.users
   for each row execute function public.criar_perfil();
 
--- Se alguma conta foi criada ANTES deste script, cria o perfil dela agora.
+-- perfil de contas criadas antes deste script
 insert into perfis (id, nome)
 select id, coalesce(raw_user_meta_data ->> 'nome', email) from auth.users
 on conflict (id) do nothing;
 
 
--- ---------------------------------------------------------------------
---  Em todas as tabelas abaixo, "autor_id" guarda QUEM registrou.
---  "default auth.uid()" = o próprio banco preenche com o usuário logado,
---  então o app não precisa mandar (e as regras do fim do arquivo não
---  deixam mandar o nome de outra pessoa).
--- ---------------------------------------------------------------------
+-- autor_id = quem registrou (o banco preenche com o usuário logado)
 
--- PACIENTES
+-- Pacientes
 create table if not exists pacientes (
   id             bigint generated always as identity primary key,
   nome           text not null,
@@ -77,7 +59,7 @@ create table if not exists pacientes (
   autor_id       uuid default auth.uid() references perfis(id)
 );
 
--- PASSAGEM DE PLANTÃO e EVOLUÇÃO DE ENFERMAGEM (funcionalidade principal)
+-- Passagem de plantão e evolução
 create table if not exists registros_plantao (
   id          bigint generated always as identity primary key,
   paciente_id bigint not null references pacientes(id) on delete cascade,
@@ -88,7 +70,7 @@ create table if not exists registros_plantao (
   autor_id    uuid default auth.uid() references perfis(id)
 );
 
--- SINAIS VITAIS: pode salvar só o que foi medido (o resto fica vazio)
+-- Sinais vitais (só o que foi medido)
 create table if not exists sinais_vitais (
   id          bigint generated always as identity primary key,
   paciente_id bigint not null references pacientes(id) on delete cascade,
@@ -103,14 +85,13 @@ create table if not exists sinais_vitais (
   autor_id    uuid default auth.uid() references perfis(id),
   -- pelo menos um valor preenchido
   check (num_nonnulls(pa_sist, pa_diast, fc, temp, spo2, fr, dor) > 0),
-  -- a pressão vem sempre em par (sistólica/diastólica)...
+  -- pressão sempre completa
   check ((pa_sist is null) = (pa_diast is null)),
-  -- ...e a diastólica é menor que a sistólica
+  -- diastólica menor que a sistólica
   check (pa_diast < pa_sist)
 );
 
--- MEDICAÇÕES: a enfermagem transcreve a prescrição, um horário por linha
--- (aprazamento). Ex.: 12/12h vira duas linhas, 08:00 e 20:00.
+-- Medicações (um horário por linha: 12/12h vira 08:00 e 20:00)
 create table if not exists medicacoes (
   id          bigint generated always as identity primary key,
   paciente_id bigint not null references pacientes(id) on delete cascade,
@@ -122,7 +103,7 @@ create table if not exists medicacoes (
   autor_id    uuid default auth.uid() references perfis(id)
 );
 
--- Cada dose checada (administrada)
+-- Doses checadas
 create table if not exists administracoes (
   id              bigint generated always as identity primary key,
   medicacao_id    bigint not null references medicacoes(id) on delete cascade,
@@ -133,7 +114,7 @@ create table if not exists administracoes (
   unique (medicacao_id, dia)     -- a mesma dose não pode ser checada 2x no dia
 );
 
--- EXAMES
+-- Exames
 create table if not exists exames (
   id            bigint generated always as identity primary key,
   paciente_id   bigint not null references pacientes(id) on delete cascade,
@@ -144,7 +125,7 @@ create table if not exists exames (
   autor_id      uuid default auth.uid() references perfis(id)
 );
 
--- OBSERVAÇÕES
+-- Observações
 create table if not exists observacoes (
   id          bigint generated always as identity primary key,
   paciente_id bigint not null references pacientes(id) on delete cascade,
@@ -154,22 +135,13 @@ create table if not exists observacoes (
 );
 
 
--- =====================================================================
---  PERMISSÕES
---  anon          = quem NÃO fez login: não acessa nada.
---  authenticated = quem fez login: lê e registra. Nunca apaga, e a única
---                  coisa que altera é o status do exame.
---  Como no prontuário de papel, o que foi registrado não se edita:
---  se errou, faz um registro novo.
--- =====================================================================
--- O Supabase já vem liberando tudo (até apagar), então primeiro tira tudo
--- e depois dá só o necessário.
+-- Permissões: sem login não acessa nada; logado lê e registra, e só altera o status do exame.
+-- O Supabase libera tudo por padrão, então tira tudo e dá só o necessário.
 revoke all on all tables in schema public from anon, authenticated;
 grant select, insert on all tables in schema public to authenticated;
 grant update (status) on exames to authenticated;
 
--- RLS (Row Level Security): além da permissão, cada tabela tem regras
--- que o banco confere linha por linha.
+-- RLS
 alter table pacientes         enable row level security;
 alter table registros_plantao enable row level security;
 alter table sinais_vitais     enable row level security;
@@ -179,7 +151,7 @@ alter table exames            enable row level security;
 alter table observacoes       enable row level security;
 alter table perfis            enable row level security;
 
--- Apaga as regras antigas para o arquivo poder rodar de novo
+-- apaga as regras antigas (para poder rodar de novo)
 drop policy if exists "equipe le" on pacientes;
 drop policy if exists "equipe le" on registros_plantao;
 drop policy if exists "equipe le" on sinais_vitais;
@@ -197,7 +169,7 @@ drop policy if exists "registra no proprio nome" on exames;
 drop policy if exists "registra no proprio nome" on observacoes;
 drop policy if exists "muda o status" on exames;
 
--- Ler: qualquer pessoa da equipe logada vê todas as linhas.
+-- ler: toda a equipe logada
 create policy "equipe le" on pacientes         for select to authenticated using (true);
 create policy "equipe le" on registros_plantao for select to authenticated using (true);
 create policy "equipe le" on sinais_vitais     for select to authenticated using (true);
@@ -207,8 +179,7 @@ create policy "equipe le" on exames            for select to authenticated using
 create policy "equipe le" on observacoes       for select to authenticated using (true);
 create policy "equipe le" on perfis            for select to authenticated using (true);
 
--- Registrar: só no próprio nome (autor_id tem que ser quem está logado).
--- Perfis não entram aqui: quem cria o perfil é o gatilho do começo.
+-- registrar: só no próprio nome
 create policy "registra no proprio nome" on pacientes         for insert to authenticated with check (autor_id = auth.uid());
 create policy "registra no proprio nome" on registros_plantao for insert to authenticated with check (autor_id = auth.uid());
 create policy "registra no proprio nome" on sinais_vitais     for insert to authenticated with check (autor_id = auth.uid());
@@ -217,6 +188,5 @@ create policy "registra no proprio nome" on administracoes    for insert to auth
 create policy "registra no proprio nome" on exames            for insert to authenticated with check (autor_id = auth.uid());
 create policy "registra no proprio nome" on observacoes       for insert to authenticated with check (autor_id = auth.uid());
 
--- Alterar: qualquer pessoa da equipe muda o status de qualquer exame
--- (a permissão lá em cima só deixa mexer na coluna status).
+-- alterar: só o status do exame
 create policy "muda o status" on exames for update to authenticated using (true) with check (true);

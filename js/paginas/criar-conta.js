@@ -1,4 +1,4 @@
-// Criar conta: acesso da equipe de enfermagem
+// Criar conta
 import { supabase, traduzirErro } from '../supabase.js';
 import { iniciarTela, mostrarErro, nomeCompletoValido } from '../comum.js';
 
@@ -6,7 +6,6 @@ await iniciarTela({ titulo: 'Criar conta', voltar: '/index.html', publica: true 
 
 const form = document.getElementById('form');
 
-// Devolve o problema da senha, ou '' se ela estiver boa
 function problemaDaSenha(senha) {
   if (senha.length < 8) return 'A senha precisa ter pelo menos 8 caracteres.';
   if (!/[a-zA-Z]/.test(senha) || !/[0-9]/.test(senha)) return 'A senha precisa ter letras e números.';
@@ -15,7 +14,7 @@ function problemaDaSenha(senha) {
 
 form.addEventListener('submit', async (evento) => {
   evento.preventDefault();
-  const nome = form.nome.value.trim().replace(/\s+/g, ' '); // "Maria   Silva" -> "Maria Silva"
+  const nome = form.nome.value.trim().replace(/\s+/g, ' ');
   const email = form.email.value.trim();
   const senha = form.senha.value;
 
@@ -32,13 +31,12 @@ form.addEventListener('submit', async (evento) => {
     email: email,
     password: senha,
     options: {
-      // Estes dados vão para a tabela "perfis" pelo gatilho criar_perfil
-      // (banco-de-dados/01-estrutura.sql). Campo vazio vai como null.
+      // vai para a tabela perfis pelo gatilho criar_perfil
       data: {
         nome: nome,
         funcao: form.funcao.value,
         setor: form.setor.value.trim() || null,
-        plantao: form.plantao.value, // valor do botão de rádio marcado
+        plantao: form.plantao.value,
       },
     },
   });
@@ -46,7 +44,7 @@ form.addEventListener('submit', async (evento) => {
 
   if (error) return mostrarErro(form, traduzirErro(error));
 
-  // Conta criada mas sem sessão = o Supabase está pedindo confirmação por e-mail
+  // sem sessão = o Supabase está pedindo confirmação por e-mail
   if (!data.session) {
     return mostrarErro(form, 'Conta criada, mas o Supabase pediu confirmação por e-mail. '
       + 'Desligue "Confirm email" no Supabase (Authentication > Sign In / Providers > Email) ou confirme pelo link do e-mail.');

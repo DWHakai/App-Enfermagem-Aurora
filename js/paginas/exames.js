@@ -9,14 +9,13 @@ const lista = document.getElementById('lista');
 const form = document.getElementById('form');
 const botao = document.getElementById('solicitar');
 
-// Tocar no status passa para o próximo (os 3 nomes são os mesmos do banco)
+// toque no status passa para o próximo
 const PROXIMO_STATUS = {
   'Pendente': 'Em análise',
   'Em análise': 'Disponível',
   'Disponível': 'Pendente',
 };
 
-// Classe do CSS que dá a cor de cada status
 const COR_DO_STATUS = {
   'Pendente': 'pendente',
   'Em análise': 'em-analise',
@@ -34,7 +33,6 @@ async function mostrarLista() {
     return;
   }
 
-  // data-id e data-status guardam no botão qual exame ele muda
   lista.innerHTML = data.map((exame) => `
     <li class="item">
       <img src="/img/icones/documento.svg" alt="">
@@ -89,7 +87,6 @@ botao.addEventListener('click', async () => {
   await mostrarLista();
 });
 
-// Enter no campo = mesmo que tocar em "Confirmar solicitação"
 form.addEventListener('submit', (evento) => {
   evento.preventDefault();
   botao.click();

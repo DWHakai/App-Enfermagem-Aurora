@@ -4,12 +4,10 @@ import { iniciarTela, escolherPaciente } from '../comum.js';
 
 const { usuario } = await iniciarTela({ titulo: 'Meu Perfil' });
 
-// textContent (e não innerHTML) já protege contra código digitado nos campos
 function escrever(id, texto) {
   document.getElementById(id).textContent = texto;
 }
 
-// Dados da pessoa: vêm da tabela "perfis" (preenchida quando a conta foi criada)
 async function mostrarPerfil() {
   const { data, error } = await supabase.from('perfis').select('*').eq('id', usuario.id);
   if (error) return alert(traduzirErro(error));
@@ -22,7 +20,6 @@ async function mostrarPerfil() {
   escrever('plantao', perfil.plantao || '—');
 }
 
-// Quantos pacientes esta pessoa cadastrou
 async function contarPacientes() {
   const { data, error } = await supabase.from('pacientes').select('id').eq('autor_id', usuario.id);
   if (error) return;
@@ -33,7 +30,7 @@ async function contarPacientes() {
 document.getElementById('sair').addEventListener('click', async () => {
   const { error } = await supabase.auth.signOut();
   if (error) return alert(traduzirErro(error));
-  escolherPaciente(null); // o próximo login começa sem paciente escolhido
+  escolherPaciente(null);
   location.replace('/index.html');
 });
 

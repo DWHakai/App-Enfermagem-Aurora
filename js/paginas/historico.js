@@ -1,6 +1,4 @@
-// Tela 8 - Histórico = TELA DE ACOMPANHAMENTO
-// Junta tudo o que foi registrado para o paciente numa linha do tempo,
-// do mais recente para o mais antigo.
+// Tela 8 - Histórico (acompanhamento)
 import { supabase, traduzirErro } from '../supabase.js';
 import {
   iniciarTela, mostrarPacienteAtual, nomesDaEquipe, esc,
@@ -10,14 +8,12 @@ import {
 const { paciente } = await iniciarTela({ titulo: 'Histórico', precisaPaciente: true });
 mostrarPacienteAtual(paciente);
 
-// Busca todas as linhas de uma tabela que são deste paciente
 async function buscar(tabela) {
   const { data, error } = await supabase.from(tabela).select('*').eq('paciente_id', paciente.id);
   if (error) alert(traduzirErro(error));
   return data || [];
 }
 
-// "PA 120/80 · FC 88 · T 36,5°C" (só o que foi medido)
 function resumoDosSinais(s) {
   const partes = [];
   if (s.pa_sist !== null) partes.push(`PA ${s.pa_sist}/${s.pa_diast}`);
@@ -37,12 +33,10 @@ const doses = await buscar('administracoes');
 const exames = await buscar('exames');
 const observacoes = await buscar('observacoes');
 
-// " — Meredith Grey" (quem fez o registro), ou nada se não souber
 function autor(id) {
   return nomes[id] ? ` — ${nomes[id]}` : '';
 }
 
-// Cada evento da linha do tempo: { quando, titulo, detalhe }
 const eventos = [];
 eventos.push({ quando: paciente.admissao, titulo: 'Admissão do paciente', detalhe: '' });
 
@@ -69,7 +63,6 @@ for (const o of observacoes) {
   eventos.push({ quando: o.criado_em, titulo: 'Observação' + autor(o.autor_id), detalhe: o.texto });
 }
 
-// Do mais recente para o mais antigo
 eventos.sort((a, b) => new Date(b.quando) - new Date(a.quando));
 
 document.getElementById('lista').innerHTML = eventos.map((e) => `

@@ -5,12 +5,12 @@ import { iniciarTela, escolherPaciente, avisoSucesso, mostrarErro, hojeISO, nome
 await iniciarTela({ titulo: 'Cadastro de Paciente' });
 
 const form = document.getElementById('form');
-form.data_nasc.max = hojeISO(); // o calendário não deixa escolher data no futuro
+form.data_nasc.max = hojeISO();
 
 form.addEventListener('submit', async (evento) => {
   evento.preventDefault();
 
-  const nome = form.nome.value.trim().replace(/\s+/g, ' '); // "Maria   Silva" -> "Maria Silva"
+  const nome = form.nome.value.trim().replace(/\s+/g, ' ');
   const nomeMae = form.nome_mae.value.trim().replace(/\s+/g, ' ');
   if (!nome) {
     form.nome.focus();
@@ -31,7 +31,6 @@ form.addEventListener('submit', async (evento) => {
     return mostrarErro(form, 'Nome da mãe: digite nome e sobrenome, só com letras.');
   }
 
-  // Campo opcional vazio vai como null (fica vazio no banco)
   const paciente = {
     nome: nome,
     data_nasc: form.data_nasc.value,
@@ -47,7 +46,7 @@ form.addEventListener('submit', async (evento) => {
   const botao = form.querySelector('button');
   botao.disabled = true;
 
-  // Mesmo nome e mesmo nascimento = provavelmente o paciente já foi cadastrado
+  // já existe paciente com esse nome e nascimento?
   const jaExiste = await supabase.from('pacientes').select('id')
     .eq('nome', paciente.nome)
     .eq('data_nasc', paciente.data_nasc);
@@ -57,12 +56,11 @@ form.addEventListener('submit', async (evento) => {
     return;
   }
 
-  // .select() no final = o banco devolve o paciente criado (precisamos do id dele)
   const { data, error } = await supabase.from('pacientes').insert(paciente).select();
   botao.disabled = false;
   if (error) return mostrarErro(form, traduzirErro(error));
 
-  escolherPaciente(data[0].id); // o paciente novo já fica escolhido
+  escolherPaciente(data[0].id);
   await avisoSucesso('Paciente cadastrado!');
   location.href = '/pages/paciente.html';
 });

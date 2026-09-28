@@ -1,10 +1,4 @@
-/* =====================================================================
-   ESTILO DO APP — cores, fontes e o visual de todas as telas.
-   As cores foram tiradas das telas exportadas do Figma.
-   Ordem: 1) base  2) peças que se repetem  3) cada tela
-   ===================================================================== */
-
-/* ---------- 1. BASE ---------- */
+/* Base */
 :root {
   --fundo: #F7F7FA;
   --rosa: #F7C4E0;
@@ -13,10 +7,10 @@
   --azul-claro: #EEF5FD;
   --amarelo: #FBFB9B;
   --amarelo-badge: #FFEDA8;
-  --tinta: #2E6ED1;          /* contornos e títulos grandes */
-  --tinta-escura: #1F4C9E;   /* textos */
-  --rosa-tinta: #E05499;     /* detalhes rosa, obrigatório, alerta */
-  --cinza: #7384A6;          /* placeholders e rótulos */
+  --tinta: #2E6ED1;
+  --tinta-escura: #1F4C9E;
+  --rosa-tinta: #E05499;
+  --cinza: #7384A6;
   --branco: #FFFFFF;
   --erro: #C0304F;
 
@@ -45,11 +39,10 @@ img { display: block; }
 button, input, select, textarea { font: inherit; color: inherit; }
 [hidden] { display: none !important; }
 
-/* Tira o retângulo azul que o Chrome do Android desenha no que é tocado
-   (ele é quadrado e ignora o arredondado). O retorno do toque fica na seção "Toque e foco". */
+/* sem o destaque azul de toque do Android */
 html { -webkit-tap-highlight-color: transparent; }
 
-/* Telas com login ficam invisíveis até confirmar o usuário (evita "piscar"). */
+/* esconde a tela até confirmar o login */
 body.protegida:not(.pronto) .app { visibility: hidden; }
 
 .app {
@@ -61,7 +54,7 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
   background: var(--fundo);
 }
 
-/* No computador: moldura de celular, igual ao protótipo. */
+/* computador: moldura de celular */
 @media (min-width: 600px) {
   body { background: #E9EDF5; padding: 28px 0; }
   .app {
@@ -72,15 +65,15 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
   }
 }
 
-/* Texto só para leitor de tela (acessibilidade) */
+/* só para leitor de tela */
 .escondido {
   position: absolute; width: 1px; height: 1px;
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
 }
 
-/* ---------- 2. PEÇAS QUE SE REPETEM ---------- */
+/* Componentes */
 
-/* Cabeçalho: logo + marca + avatar (montado pelo comum.js) */
+/* Cabeçalho */
 #topo {
   display: grid;
   grid-template-columns: 70px 1fr 40px;
@@ -142,9 +135,7 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
 .btn-normal { text-transform: none; letter-spacing: 0; }
 .btn-pequeno { min-height: 44px; font-size: 17px; }
 
-/* Toque e foco: tudo que é clicável "afunda" um pouco ao tocar, no formato
-   do próprio botão. No computador, quem navega pelo teclado (Tab) vê um anel
-   arredondado; clicando com o mouse, o anel não aparece. */
+/* Toque e foco */
 .btn, .cartao, .aba, .badge, .chip-paciente, .btn-voltar, .topo-avatar, .expansivel > summary, .link-simples {
   transition: transform .08s ease, filter .08s ease, opacity .08s ease;
 }
@@ -164,7 +155,6 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
 }
 
 .pilha { display: grid; gap: 14px; }
-/* align-items: end = se um rótulo quebrar linha, os campos continuam alinhados */
 .duas-colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: end; }
 
 /* Formulários */
@@ -184,7 +174,7 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
 .campo.obrigatorio .input { border-color: var(--rosa-tinta); }
 .textarea { min-height: 110px; resize: vertical; }
 
-/* Campo com ícone dentro (login) */
+/* Campo com ícone (login) */
 .input-icone { position: relative; display: block; }
 .input-icone img {
   position: absolute; left: 16px; top: 50%; translate: 0 -50%;
@@ -192,12 +182,12 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
 }
 .input-icone .input { min-height: 52px; padding-left: 52px; }
 
-/* Área sigilosa (LGPD) */
+/* Área sigilosa */
 .sigilo > span:first-child { display: flex; align-items: center; gap: 6px; font-weight: 700; color: var(--rosa-tinta); }
 .sigilo > span:first-child img { width: 20px; }
 .sigilo .textarea { min-height: 80px; background: var(--rosa-claro); border: 2px dashed var(--rosa-tinta); }
 
-/* Botões de escolha única (Plantão: Diurno / Noturno / 12x36) */
+/* Escolha única (plantão) */
 .opcoes { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; border: 0; }
 .opcoes legend { margin-bottom: 6px; padding: 0; }
 .opcoes label { position: relative; }
@@ -220,13 +210,13 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
 .dica { font-size: 14px; color: var(--cinza); }
 .dica-rosa { font-size: 14px; color: var(--rosa-tinta); }
 
-/* Botão "Instalar o app no celular" (Login e Perfil) */
+/* Botão instalar */
 .instalar { width: 100%; display: flex; flex-direction: column; gap: 8px; }
 .instalar[hidden] { display: none; }
 .instalar .dica { font-size: 16px; color: var(--tinta); text-align: center; }
 .instalar .dica:empty { display: none; }
 
-/* Caixa com faixa azul de título (Paciente, Passagem, Nova observação) */
+/* Caixa com título azul */
 .bloco { overflow: hidden; background: var(--branco); border: var(--borda); border-radius: 12px; }
 .bloco > label {
   display: block; padding: 6px 14px;
@@ -235,7 +225,7 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
 .bloco .textarea { min-height: 120px; border: 0; border-radius: 0; box-shadow: none; }
 .bloco .select { width: calc(100% - 20px); margin: 10px; }
 
-/* Formulário que abre dentro da tela (ex.: adicionar medicação) */
+/* Formulário que abre dentro da tela */
 .expansivel { margin-bottom: 16px; background: var(--branco); border: var(--borda); border-radius: var(--raio); }
 .btn + .expansivel { margin-top: 16px; }
 .expansivel > summary {
@@ -262,7 +252,7 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
 .item .texto b { display: block; font-size: 18px; line-height: 1.15; }
 .item .texto small { font-size: 15px; color: var(--cinza); }
 
-/* Cartão de evento (histórico e observações), alternando rosa e azul */
+/* Cartão de evento (histórico e observações) */
 .evento { padding: 8px 14px; border: var(--borda); border-radius: var(--raio); }
 .evento:nth-child(odd) { background: var(--rosa); }
 .evento:nth-child(even) { background: var(--azul); }
@@ -276,7 +266,7 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
 }
 .subtitulo { margin: 20px 0 12px; font-size: 21px; font-weight: 700; }
 
-/* Ficha e perfil (lista "rótulo: valor") */
+/* Ficha e perfil */
 .dados {
   display: grid; gap: 4px;
   margin: 0 0 14px; padding: 12px 16px;
@@ -288,7 +278,7 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
 .dados dd { margin: 0; text-align: right; }
 .dados .alerta { font-weight: 700; color: var(--rosa-tinta); }
 
-/* Aviso "Salvo com sucesso!" (igual ao do Figma) */
+/* Aviso de salvo */
 .overlay {
   position: fixed; inset: 0; z-index: 50;
   display: grid; place-items: center; padding: 24px;
@@ -311,7 +301,7 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
 .overlay-caixa p { font-size: 25px; font-weight: 700; line-height: 1.1; text-align: center; }
 .btn-ok { width: 150px; min-height: 42px; font-size: 18px; }
 
-/* ---------- 3. CADA TELA ---------- */
+/* Telas */
 
 /* Login */
 .login { display: flex; flex-direction: column; align-items: center; gap: 18px; padding-top: 18px; }
@@ -371,7 +361,7 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
 .ficha-topo .sub { font-size: 15px; color: var(--cinza); }
 #info-sigilosa { white-space: pre-wrap; }
 
-/* Plantão (abas Passagem / Evolução) */
+/* Plantão */
 .abas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .aba {
   position: relative;
@@ -414,7 +404,7 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
 .sinal .rotulo { font-size: 16px; }
 .sinal .valor { font-size: 34px; font-weight: 700; line-height: 1.05; color: var(--tinta); }
 .sinal .unid { font-size: 15px; font-weight: 400; color: var(--cinza); }
-.sinal .valor .unid { display: block; } /* unidade embaixo: "120/80" cabe e os cartões ficam iguais */
+.sinal .valor .unid { display: block; }
 .sinal input {
   width: 100%; margin-top: 4px; padding: 4px 6px;
   background: var(--branco);
@@ -456,7 +446,7 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
 .badge.pendente { background: var(--rosa); }
 .badge.em-analise { background: var(--amarelo-badge); }
 
-/* Histórico (linha do tempo) */
+/* Histórico */
 .linha-tempo { position: relative; padding-left: 20px; }
 .linha-tempo::before {
   content: ''; position: absolute; left: 0; top: 0; bottom: 0;

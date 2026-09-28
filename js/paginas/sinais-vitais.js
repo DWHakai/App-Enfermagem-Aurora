@@ -8,11 +8,7 @@ import {
 const { paciente } = await iniciarTela({ titulo: 'Sinais Vitais', precisaPaciente: true });
 mostrarPacienteAtual(paciente);
 
-// Regras de cada sinal (a chave é o name do campo e a coluna do banco):
-//   min / max             = valores aceitos (os mesmos do 01-estrutura.sql)
-//   normalMin / normalMax = faixa normal; fora dela o cartão fica destacado
-//   decimal               = aceita vírgula (só a temperatura)
-// ATENÇÃO: as faixas normais precisam ser conferidas com a Enfermagem.
+// min/max = valores aceitos; normalMin/normalMax = faixa normal (fora dela o cartão fica destacado)
 const SINAIS = {
   pa_sist:  { nome: 'Pressão sistólica',       min: 40, max: 300, normalMin: 90,   normalMax: 139 },
   pa_diast: { nome: 'Pressão diastólica',      min: 20, max: 200, normalMin: 60,   normalMax: 89 },
@@ -25,14 +21,11 @@ const SINAIS = {
 
 const form = document.getElementById('form');
 
-// true se o valor foi medido e está fora da faixa normal
 function foraDoNormal(campo, valor) {
   if (valor === null) return false;
   return valor < SINAIS[campo].normalMin || valor > SINAIS[campo].normalMax;
 }
 
-// Um cartão da última aferição. Os valores vêm do banco como números
-// (ou "—"), por isso podem ir direto no HTML.
 function cartao(rotulo, valor, unidade, destacar) {
   return `
     <div class="sinal ${destacar ? 'alterado' : ''}">
@@ -45,7 +38,7 @@ async function mostrarUltima() {
   const { data, error } = await supabase.from('sinais_vitais').select('*')
     .eq('paciente_id', paciente.id)
     .order('aferido_em', { ascending: false })
-    .limit(1); // só a mais recente
+    .limit(1);
   if (error) return alert(traduzirErro(error));
 
   const cartoes = document.getElementById('cartoes');
@@ -57,7 +50,7 @@ async function mostrarUltima() {
     return;
   }
 
-  const s = data[0]; // o que não foi medido vem como null e aparece como "—"
+  const s = data[0];
   const pressao = s.pa_sist === null ? '—' : `${s.pa_sist}/${s.pa_diast}`;
   cartoes.innerHTML =
     cartao('Pressão', pressao, 'mmHg', foraDoNormal('pa_sist', s.pa_sist) || foraDoNormal('pa_diast', s.pa_diast)) +
@@ -69,7 +62,6 @@ async function mostrarUltima() {
   ultima.textContent = `Última aferição: ${formatarData(s.aferido_em)} · ${formatarHora(s.aferido_em)}`;
 }
 
-// Troca entre "ver a última" e "registrar"
 function modoRegistrar(ligado) {
   document.getElementById('ver').hidden = ligado;
   form.hidden = !ligado;
@@ -89,13 +81,12 @@ document.getElementById('cancelar').addEventListener('click', () => {
 form.addEventListener('submit', async (evento) => {
   evento.preventDefault();
 
-  // Lê cada campo: vazio vira null; com valor, confere se é número e se está na faixa
   const afericao = { paciente_id: paciente.id };
   let preenchidos = 0;
 
   for (const campo in SINAIS) {
     const regra = SINAIS[campo];
-    const texto = form[campo].value.trim().replace(',', '.'); // "36,5" -> "36.5"
+    const texto = form[campo].value.trim().replace(',', '.');
     if (texto === '') {
       afericao[campo] = null;
       continue;

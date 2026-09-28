@@ -23,7 +23,7 @@ async function mostrarLista() {
     return;
   }
 
-  // esc() no texto digitado: sem isso, um <script> escrito na observação rodaria aqui
+  // esc() evita XSS
   lista.innerHTML = data.map((o) => `
     <li class="evento">
       <div class="quando">${formatarDiaMes(o.criado_em)} · ${formatarHora(o.criado_em)} · ${esc(nomes[o.autor_id] || 'Equipe')}</div>

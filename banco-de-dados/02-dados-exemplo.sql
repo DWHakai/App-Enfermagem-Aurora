@@ -1,7 +1,4 @@
--- =====================================================================
---  Dados de exemplo (FICTÍCIOS) para testar e apresentar o app.
---  Rode DEPOIS do 01-estrutura.sql. Se rodar de novo, duplica os dados.
--- =====================================================================
+-- Dados de exemplo (fictícios). Rodar depois do 01. Se rodar de novo, duplica.
 
 insert into pacientes (nome, data_nasc, leito, nome_mae, setor, estado_clinico, alergias, diagnostico, info_sigilosa, admissao) values
   ('Maria Aparecida Silva', '1964-03-12', '12', 'Joana Silva', 'Clínica Médica - Ala B', 'Estável',
@@ -9,7 +6,7 @@ insert into pacientes (nome, data_nasc, leito, nome_mae, setor, estado_clinico, 
   ('José Carlos Pereira', '1951-11-02', '14', 'Ana Pereira', 'Clínica Médica - Ala B', 'Em observação',
    null, 'ICC descompensada', null, now() - interval '2 days');
 
--- Uma passagem de plantão do turno anterior (aparece no Histórico)
+-- passagem de plantão do turno anterior
 insert into registros_plantao (paciente_id, tipo, texto, data_hora)
 select id, 'passagem',
   'Paciente em O2 por cateter nasal a 2 L/min. Aceitou a dieta. Acesso venoso em MSE, sem sinais de flebite. Sem queixa de dor.',

@@ -1,14 +1,7 @@
-// =====================================================================
-//  COMUM: funções que várias telas usam.
-//  Cada tela importa só o que precisa, por exemplo:
-//    import { iniciarTela, esc } from '../comum.js';
-// =====================================================================
+// Funções usadas por várias telas
 import { supabase, traduzirErro } from './supabase.js';
 
-// ---------------------------------------------------------------------
-//  SEGURANÇA: escapa o texto digitado antes de colocar no HTML.
-//  Sem isso, alguém poderia digitar <script> num campo e rodar código (XSS).
-// ---------------------------------------------------------------------
+// evita XSS: texto digitado não vira HTML
 export function esc(texto) {
   return String(texto ?? '')
     .replaceAll('&', '&amp;')
@@ -18,21 +11,12 @@ export function esc(texto) {
     .replaceAll("'", '&#39;');
 }
 
-// ---------------------------------------------------------------------
-//  VALIDAÇÃO de nome: "Maria Silva" vale; "Maria" ou "M4ria S" não.
-//  Aceita letras com acento, espaço, hífen e apóstrofo (D'Ávila).
-//  \p{L} = qualquer letra (precisa do "u" no fim da expressão).
-// ---------------------------------------------------------------------
+// nome e sobrenome, só letras
 export function nomeCompletoValido(nome) {
   const partes = nome.split(' ').filter((parte) => parte !== '');
   return /^[\p{L}' -]+$/u.test(nome) && partes.length >= 2 && partes.every((parte) => parte.length >= 2);
 }
 
-// ---------------------------------------------------------------------
-//  DATAS E NÚMEROS no padrão brasileiro
-// ---------------------------------------------------------------------
-
-// Data de hoje no formato do banco: "2026-09-26" (no fuso do aparelho)
 export function hojeISO() {
   const agora = new Date();
   const mes = String(agora.getMonth() + 1).padStart(2, '0');
@@ -40,34 +24,28 @@ export function hojeISO() {
   return `${agora.getFullYear()}-${mes}-${dia}`;
 }
 
-// Hora de agora: "14:05"
 export function horaAgora() {
   return new Date().toTimeString().slice(0, 5);
 }
 
-// "2026-09-26T17:05:00+00:00" -> "26/09/2026"
 export function formatarData(iso) {
   if (!iso) return '—';
   return new Date(iso).toLocaleDateString('pt-BR');
 }
 
-// -> "26/09"
 export function formatarDiaMes(iso) {
   return new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
 }
 
-// -> "14:05"
 export function formatarHora(iso) {
   return new Date(iso).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 }
 
-// 36.5 -> "36,5"   |   vazio -> "—"
 export function formatarNumero(numero) {
   if (numero === null || numero === undefined) return '—';
   return String(numero).replace('.', ',');
 }
 
-// "1964-03-12" -> 62 (anos completos hoje)
 export function calcularIdade(dataNascimento) {
   const nascimento = new Date(dataNascimento + 'T00:00:00');
   const hoje = new Date();
@@ -79,22 +57,13 @@ export function calcularIdade(dataNascimento) {
   return anos;
 }
 
-// ---------------------------------------------------------------------
-//  LOGIN
-// ---------------------------------------------------------------------
-
-// Devolve a conta que está logada (tem .id e .email) ou null se ninguém entrou.
-// O Supabase guarda a sessão no navegador, então isto não precisa de internet.
 export async function usuarioLogado() {
   const { data } = await supabase.auth.getSession();
   if (data.session) return data.session.user;
   return null;
 }
 
-// ---------------------------------------------------------------------
-//  PACIENTE EM ATENDIMENTO: escolhido no menu, vale para todas as telas.
-//  Fica guardado no navegador (localStorage).
-// ---------------------------------------------------------------------
+// paciente escolhido no menu (vale para todas as telas)
 export function pacienteEscolhido() {
   return localStorage.getItem('greys_paciente');
 }
@@ -104,21 +73,19 @@ export function escolherPaciente(id) {
   else localStorage.removeItem('greys_paciente');
 }
 
-// Todos os pacientes, em ordem alfabética
 export async function listarPacientes() {
   const { data, error } = await supabase.from('pacientes').select('*').order('nome');
   if (error) alert(traduzirErro(error));
   return data || [];
 }
 
-// Transforma a lista de pacientes nas <option> de um <select>
 export function opcoesDePacientes(pacientes) {
   return pacientes
     .map((p) => `<option value="${p.id}">${esc(p.nome)} · Leito ${esc(p.leito || '—')}</option>`)
     .join('');
 }
 
-// Nomes da equipe para mostrar quem fez cada registro: { 'id-da-pessoa': 'Meredith Grey' }
+// { id: nome } para mostrar quem fez cada registro
 export async function nomesDaEquipe() {
   const { data } = await supabase.from('perfis').select('id, nome');
   const nomes = {};
@@ -128,16 +95,7 @@ export async function nomesDaEquipe() {
   return nomes;
 }
 
-// ---------------------------------------------------------------------
-//  MONTAGEM DE TODA TELA
-//  1) exige login  2) busca o paciente escolhido  3) desenha o cabeçalho
-//  Opções:
-//    titulo          texto do título (com o botão voltar)
-//    voltar          para onde o botão voltar leva (padrão: menu)
-//    precisaPaciente true = tela de um paciente (Sinais, Exames...)
-//    publica         true = não exige login (Criar conta, Setembro Amarelo)
-//  Devolve { usuario, paciente }.
-// ---------------------------------------------------------------------
+// Toda tela começa por aqui: confere o login, busca o paciente e monta o cabeçalho
 export async function iniciarTela({ titulo, voltar = '/pages/menu.html', precisaPaciente = false, publica = false } = {}) {
   const usuario = await usuarioLogado();
   if (!usuario && !publica) return irPara('/index.html');
@@ -156,19 +114,16 @@ export async function iniciarTela({ titulo, voltar = '/pages/menu.html', precisa
   }
 
   desenharCabecalho(usuario, titulo, voltar);
-  document.body.classList.add('pronto'); // mostra a tela (ver "protegida" no style.css)
+  document.body.classList.add('pronto');
   return { usuario, paciente };
 }
 
-// Vai para outra tela e PARA o código desta: devolve uma promessa que
-// nunca termina, então o "await iniciarTela()" da tela fica esperando
-// para sempre enquanto o navegador troca de página.
+// a promessa nunca termina, então o resto da tela não roda enquanto a página troca
 function irPara(endereco) {
   location.replace(endereco);
   return new Promise(() => {});
 }
 
-// Cabeçalho igual em todas as telas: logo + marca + avatar (+ título)
 function desenharCabecalho(usuario, titulo, voltar) {
   const topo = document.getElementById('topo');
   topo.innerHTML = `
@@ -191,7 +146,6 @@ function desenharCabecalho(usuario, titulo, voltar) {
   }
 }
 
-// Faixa "Maria Aparecida Silva · Leito 12   trocar" abaixo do título
 export function mostrarPacienteAtual(paciente) {
   document.querySelector('.titulo-tela').insertAdjacentHTML('afterend', `
     <a class="chip-paciente" href="/pages/menu.html?escolher=1">
@@ -201,12 +155,7 @@ export function mostrarPacienteAtual(paciente) {
     </a>`);
 }
 
-// ---------------------------------------------------------------------
-//  AVISOS
-// ---------------------------------------------------------------------
-
-// Aviso "Salvo com sucesso!" (igual ao do Figma). A tela usa
-// "await avisoSucesso()" para esperar a pessoa tocar em OK.
+// espera a pessoa tocar em OK
 export function avisoSucesso(mensagem = 'Salvo com sucesso!') {
   document.body.insertAdjacentHTML('beforeend', `
     <div class="overlay">
@@ -228,7 +177,6 @@ export function avisoSucesso(mensagem = 'Salvo com sucesso!') {
   });
 }
 
-// Mostra um erro no fim do formulário (mensagem vazia = esconde o erro)
 export function mostrarErro(form, mensagem) {
   let caixa = form.querySelector('.erro');
   if (!caixa) {
@@ -241,20 +189,12 @@ export function mostrarErro(form, mensagem) {
   caixa.hidden = !mensagem;
 }
 
-// ---------------------------------------------------------------------
-//  APP INSTALÁVEL: registra o service worker (arquivo /sw.js)
-// ---------------------------------------------------------------------
+// PWA
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').catch((erro) => console.warn('Service worker:', erro));
 }
 
-// ---------------------------------------------------------------------
-//  BOTÃO "INSTALAR O APP" (tela de Login e Perfil, na caixa id="instalar")
-//  Android: o Chrome avisa que o app pode ser instalado (evento
-//  "beforeinstallprompt"). Guardamos o aviso e o nosso botão abre a
-//  janela "Instalar" do próprio Chrome: um toque e pronto.
-//  iPhone: não existe esse aviso, então o botão explica o caminho.
-// ---------------------------------------------------------------------
+// Botão "Instalar o app no celular" (Login e Perfil)
 const caixaInstalar = document.getElementById('instalar');
 const jaInstalado = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 const ehIphone = /iPhone|iPad|iPod/.test(navigator.userAgent);
@@ -266,20 +206,20 @@ function explicarInstalacao(texto) {
 }
 
 if (caixaInstalar && !jaInstalado) {
-  // iPhone e Android sem o aviso do Chrome: o botão mostra o passo a passo
   caixaInstalar.hidden = !(ehIphone || ehAndroid);
 
+  // Chrome/Android: guarda o pedido de instalação para o botão usar
   window.addEventListener('beforeinstallprompt', (evento) => {
-    evento.preventDefault(); // guarda o aviso para o nosso botão usar
+    evento.preventDefault();
     pedidoDeInstalacao = evento;
     caixaInstalar.hidden = false;
   });
 
   document.getElementById('instalar-botao').addEventListener('click', async () => {
     if (pedidoDeInstalacao) {
-      pedidoDeInstalacao.prompt(); // abre a janela "Instalar" do Chrome
+      pedidoDeInstalacao.prompt();
       const { outcome } = await pedidoDeInstalacao.userChoice;
-      pedidoDeInstalacao = null; // o aviso só pode ser usado uma vez
+      pedidoDeInstalacao = null;
       if (outcome === 'accepted') caixaInstalar.hidden = true;
       return;
     }
@@ -290,6 +230,5 @@ if (caixaInstalar && !jaInstalado) {
     }
   });
 
-  // Instalou (pelo botão ou pelo menu do Chrome): esconde o botão
   window.addEventListener('appinstalled', () => { caixaInstalar.hidden = true; });
 }
