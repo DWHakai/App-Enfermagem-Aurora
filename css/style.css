@@ -47,22 +47,33 @@ body.protegida:not(.pronto) .app { visibility: hidden; }
 
 .app {
   width: 100%;
-  max-width: 440px;
+  max-width: 760px;
   min-height: 100dvh;
   margin: 0 auto;
   padding: 20px 20px 28px;
   background: var(--fundo);
 }
 
-/* computador: moldura de celular */
+/* tablet e app instalado: ocupa a tela toda, sem moldura */
 @media (min-width: 600px) {
+  .app { padding: 28px 28px 36px; }
+  .cartao { min-height: 128px; }
+  .cartao img { width: 46px; }
+}
+
+/* só no computador (mouse) e no navegador: moldura de celular */
+@media (min-width: 600px) and (hover: hover) and (pointer: fine) and (display-mode: browser) {
   body { background: #E9EDF5; padding: 28px 0; }
   .app {
+    max-width: 440px;
     min-height: calc(100dvh - 56px);
+    padding: 20px 20px 28px;
     border: 3px solid var(--tinta);
     border-radius: 26px;
     box-shadow: 0 12px 40px rgba(31, 76, 158, .12);
   }
+  .cartao { min-height: 106px; }
+  .cartao img { width: 40px; }
 }
 
 /* só para leitor de tela */
