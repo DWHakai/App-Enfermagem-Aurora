@@ -12,7 +12,3 @@ Funciona no navegador e pode ser instalado no celular como app.
 
 > **Todos os dados são fictícios.** O site é público: nunca cadastre pacientes reais.
 
-## Documentação
-
-- [Como funciona](docs/como-funciona.md): o código explicado, tela por tela
-- [Publicar e testar](docs/publicar-e-testar.md): Supabase, Netlify e roteiro de teste
