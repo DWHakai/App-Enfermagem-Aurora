@@ -1,4 +1,4 @@
--- Grey's Anatomy Hospital: estrutura do banco (Supabase). Pode rodar de novo.
+-- Hospital Aurora Medical Center: estrutura do banco (Supabase). Pode rodar de novo.
 
 
 -- Perfis da equipe (e-mail e senha ficam em auth.users)

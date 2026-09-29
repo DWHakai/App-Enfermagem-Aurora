@@ -128,12 +128,12 @@ function desenharCabecalho(usuario, titulo, voltar) {
   const topo = document.getElementById('topo');
   topo.innerHTML = `
     <a class="topo-logo" href="${usuario ? '/pages/menu.html' : '/index.html'}">
-      <img src="/img/logo.svg" alt="Início">
+      <img src="/img/logo.png" alt="Início">
     </a>
     <div class="marca">
-      <span class="marca-greys">GREY'S</span>
-      <span class="marca-anatomy">ANATOMY</span>
-      <span class="marca-hospital">HOSPITAL</span>
+      <span class="marca-topo">HOSPITAL</span>
+      <span class="marca-nome">AURORA</span>
+      <span class="marca-sub">MEDICAL CENTER</span>
     </div>
     ${usuario ? '<a class="topo-avatar" href="/pages/perfil.html"><img src="/img/icones/usuario.svg" alt="Meu perfil"></a>' : '<span></span>'}`;
 
@@ -162,7 +162,7 @@ export function avisoSucesso(mensagem = 'Salvo com sucesso!') {
       <div class="overlay-caixa" role="dialog" aria-modal="true">
         <div class="overlay-check"><img src="/img/icones/check.svg" alt=""></div>
         <p>${esc(mensagem)}</p>
-        <button class="btn btn-rosa btn-ok" type="button">OK</button>
+        <button class="btn btn-principal btn-ok" type="button">OK</button>
       </div>
     </div>`);
   const overlay = document.body.lastElementChild;

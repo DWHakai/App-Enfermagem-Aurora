@@ -1,4 +1,4 @@
-# Grey's Anatomy Hospital
+# Hospital Aurora Medical Center
 
 App de prontuário **de enfermagem** feito com alunos de Enfermagem, para o Trabalho Prático de
 Experiência do Usuário (profª Francielle Barros). A equipe registra passagem de plantão e evolução,

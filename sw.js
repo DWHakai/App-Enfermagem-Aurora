@@ -1,5 +1,5 @@
 // Service worker (PWA): busca sempre da rede e guarda uma cópia para quando estiver sem internet
-const CACHE = 'greys-v3';
+const CACHE = 'aurora-v1';
 
 self.addEventListener('install', () => self.skipWaiting());
 
